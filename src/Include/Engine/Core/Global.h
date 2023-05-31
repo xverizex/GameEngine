@@ -4,9 +4,11 @@
 
 namespace Global {
 
-	void set_singleton (ShaderManager* sm);
+	template<typename T>
+	void set_singleton (T* sm);
 
-	ShaderManager* get_singleton ();
+	template<typename T>
+	T* get_singleton ();
 }
 
 #endif

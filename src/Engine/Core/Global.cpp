@@ -2,16 +2,22 @@
 
 namespace Global {
 
-static ShaderManager* sm;
+template<typename T>
+static T* m;
 
-void set_singleton (ShaderManager* _sm)
+template<typename T>
+void set_singleton (T* _sm)
 {
-	sm = _sm;
+	m<T> = _sm;
 }
 
-ShaderManager* get_singleton ()
+template<typename T>
+T* get_singleton ()
 {
-	return sm;
+	return m<T>;
 }
+
+template void set_singleton<ShaderManager>(ShaderManager*);
+template ShaderManager* get_singleton<ShaderManager>();
 
 }
