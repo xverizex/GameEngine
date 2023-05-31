@@ -10,10 +10,13 @@ set (SOURCES_ENGINE
 	Engine/Core/ScreenManager.cpp
 	Engine/Utils/File.cpp
 	Engine/Core/Global.cpp
+	Engine/Core/UI.cpp
+	Engine/Core/Object.cpp
 	)
 
 set (SOURCES_GAME
 	Game/Core/GameConfig.cpp
+	Game/Shaders/ShaderRect.cpp
 	)
 
 add_executable (${PROJECT_NAME} ${SOURCES_GAME} ${SOURCES_ENGINE})
