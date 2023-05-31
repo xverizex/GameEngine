@@ -11,6 +11,7 @@ enum {
 class GameConfig: public GlobalConfig {
 	public:
 		void init_shaders () override;
+		void init_screen () override;
 };
 
 #endif

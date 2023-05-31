@@ -1,4 +1,6 @@
 #include <Engine/Core/Global.h>
+#include <Engine/Core/ShaderManager.h>
+#include <Engine/Core/ScreenManager.h>
 
 namespace Global {
 
@@ -19,5 +21,8 @@ T* get_singleton ()
 
 template void set_singleton<ShaderManager>(ShaderManager*);
 template ShaderManager* get_singleton<ShaderManager>();
+
+template void set_singleton<ScreenManager>(ScreenManager*);
+template ScreenManager* get_singleton<ScreenManager>();
 
 }

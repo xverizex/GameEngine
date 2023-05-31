@@ -7,6 +7,7 @@ pkg_check_modules (FREETYPE freetype2)
 set (SOURCES_ENGINE
 	Engine/Core/Main.cpp
 	Engine/Core/ShaderManager.cpp
+	Engine/Core/ScreenManager.cpp
 	Engine/Utils/File.cpp
 	Engine/Core/Global.cpp
 	)

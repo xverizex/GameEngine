@@ -1,6 +1,5 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
-#include <Engine/Core/ShaderManager.h>
 
 namespace Global {
 
