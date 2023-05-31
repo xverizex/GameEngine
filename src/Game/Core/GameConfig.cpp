@@ -2,12 +2,14 @@
 #include <Engine/Core/ShaderManager.h>
 #include <Engine/Core/Global.h>
 #include <Engine/Core/ScreenManager.h>
+#include <Game/Core/ShaderList.h>
+#include <Game/Shaders/Shaders.h>
 #include <vector>
 
 void GameConfig::init_shaders ()
 {
 	std::vector<ShaderInfoFile> list_shaders;
-	list_shaders.push_back ({SHADER_3D_WITHOUT_LIGHT, "shader_3d_without_light"});
+	list_shaders.push_back ({SHADER_RECT, "rect", new ShaderRect()});
 
 	ShaderManager* shader_manager = Global::get_singleton<ShaderManager> ();
 

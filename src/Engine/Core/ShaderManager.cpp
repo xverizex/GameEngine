@@ -1,4 +1,5 @@
 #include <Engine/Core/ShaderManager.h>
+#include <Engine/Core/IShader.h>
 #include <Engine/Utils/File.h>
 #include <GLES3/gl3.h>
 #include <unistd.h>
@@ -8,24 +9,25 @@ ShaderManager::ShaderManager (const uint32_t count)
 {
 	programs = new uint32_t[count];
 	if (!programs) {
-		/*
-		 * TODO: implement log_error
-		 */
-#ifdef DEBUG
-#endif
 		exit (-1);
 	}
+	shaders = new IShader*[count];
+
 	max_count = count;
 }
 
-uint32_t ShaderManager::operator[] (uint32_t idx)
+
+IShader* ShaderManager::get_shader (uint32_t idx)
 {
 	if (idx >= max_count) {
-		/*
-		 * TODO: implement log_error
-		 */
-#ifdef DEBUG
-#endif
+		exit (-1);
+	}
+	return shaders[idx];
+}
+
+uint32_t ShaderManager::get_program (uint32_t idx)
+{
+	if (idx >= max_count) {
 		exit (-1);
 	}
 	return programs[idx];
@@ -36,6 +38,8 @@ void ShaderManager::set_shaders_and_compile (std::vector<ShaderInfoFile>& list)
 	for (ShaderInfoFile shader_info: list) {
 		uint32_t idx = shader_info.index_program;
 		programs[idx] = create_program (shader_info.name);
+		shaders[idx] = shader_info.shader;
+		shaders[idx]->init ();
 	}
 }
 

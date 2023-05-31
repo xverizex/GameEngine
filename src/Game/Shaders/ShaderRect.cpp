@@ -1,10 +1,15 @@
 #include <Game/Shaders/ShaderRect.h>
+#include <Engine/Core/Global.h>
+#include <Engine/Core/ShaderManager.h>
+#include <Game/Core/ShaderList.h>
 #include <GLES3/gl3.h>
 #include <cstdio>
 
 void ShaderRect::init()
 {
-	program = getProgram(SHADER_RECT);
+	ShaderManager* shader_manager = Global::get_singleton<ShaderManager> ();
+
+	program = shader_manager->get_program(SHADER_RECT);
 
 	glUseProgram(program);
 

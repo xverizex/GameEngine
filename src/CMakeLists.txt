@@ -12,6 +12,7 @@ set (SOURCES_ENGINE
 	Engine/Core/Global.cpp
 	Engine/Core/UI.cpp
 	Engine/Core/Object.cpp
+	Engine/UI/Rect.cpp
 	)
 
 set (SOURCES_GAME

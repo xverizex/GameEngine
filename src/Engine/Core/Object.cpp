@@ -1,8 +1,8 @@
-#include "Object.h"
+#include <Engine/Core/Object.h>
+#include <Engine/Core/ShaderManager.h>
+#include <Engine/Core/ScreenManager.h>
+#include <Engine/Core/Global.h>
 #include <string.h>
-#include "AppConfig.h"
-#include "Downloader.h"
-#include "Shaders.h"
 #include <GLES3/gl3.h>
 
 Object::Object(TYPE_OBJECT type, uint32_t res)
@@ -94,21 +94,20 @@ const glm::vec3 &Object::getPosVector() const
 
 void Object::resizeMatrix()
 {
-	AppConfig *app = AppConfig::getInstance();
-	printf ("%f %f\n", app->app_width_float, app->app_height_float);
+	ScreenManager* screen_manager = Global::get_singleton<ScreenManager> ();
 
 	switch(typeObject) {
 		default:
-			mprojection = glm::ortho(0.f, app->app_width_float, 0.f, app->app_height_float, -0.1f, 10.f);
+			mprojection = glm::ortho(0.f, screen_manager->width_float, 0.f, screen_manager->height_float, -0.1f, 10.f);
 			break;
 	}
 }
 
 void Object::initUI(uint32_t res)
 {
-	AppConfig *app = AppConfig::getInstance();
-	float w = static_cast<float>(app->app_width);
-	float h = static_cast<float>(app->app_height);
+	ScreenManager* screen_manager = Global::get_singleton<ScreenManager> ();
+	float w = static_cast<float>(screen_manager->width);
+	float h = static_cast<float>(screen_manager->height);
 
 	mprojection = glm::ortho(0.f, w, 0.f, h, -0.1f, 10.f);
 

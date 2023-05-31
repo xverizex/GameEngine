@@ -3,11 +3,6 @@
 
 #include <Engine/Core/GlobalConfig.h>
 
-enum {
-	SHADER_3D_WITHOUT_LIGHT,
-	N_SHADERS
-};
-
 class GameConfig: public GlobalConfig {
 	public:
 		void init_shaders () override;

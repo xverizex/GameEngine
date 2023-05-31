@@ -5,6 +5,7 @@
 #include <Engine/Core/Global.h>
 #include <Engine/Core/ScreenManager.h>
 #include <Game/Core/GameConfig.h>
+#include <Game/Core/ShaderList.h>
 
 int
 main(int argc, char **argv)
