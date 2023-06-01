@@ -19,10 +19,4 @@ T* get_singleton ()
 	return m<T>;
 }
 
-template void set_singleton<ShaderManager>(ShaderManager*);
-template ShaderManager* get_singleton<ShaderManager>();
-
-template void set_singleton<ScreenManager>(ScreenManager*);
-template ScreenManager* get_singleton<ScreenManager>();
-
 }

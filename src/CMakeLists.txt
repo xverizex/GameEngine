@@ -9,7 +9,6 @@ set (SOURCES_ENGINE
 	Engine/Core/ShaderManager.cpp
 	Engine/Core/ScreenManager.cpp
 	Engine/Utils/File.cpp
-	Engine/Core/Global.cpp
 	Engine/Core/UI.cpp
 	Engine/Core/Object.cpp
 	Engine/UI/Rect.cpp

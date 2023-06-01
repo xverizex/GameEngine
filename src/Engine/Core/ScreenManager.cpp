@@ -1,17 +1,19 @@
 #include <Engine/Core/ScreenManager.h>
+#include <SDL2/SDL.h>
 
 void ScreenManager::set_screen_size (uint32_t _width, uint32_t _height, bool _is_fullscreen)
 {
 	width = _width;
 	height = _height;
 	is_fullscreen = _is_fullscreen;
-	width_float = (float) _width;
-	height_float = (float) _height;
+	width_float = static_cast<float>(_width);
+	height_float = static_cast<float>(_height);
 }
 
-void ScreenManager::get_screen_size (uint32_t& _width, uint32_t& _height, bool& _is_fullscreen)
+void ScreenManager::set_desktop_size (uint32_t index)
 {
-	_width = width;
-	_height = height;
-	_is_fullscreen = is_fullscreen;
+	SDL_DisplayMode mode;
+	SDL_GetDesktopDisplayMode (index, &mode);
+
+	set_screen_size (mode.w, mode.h, true);
 }

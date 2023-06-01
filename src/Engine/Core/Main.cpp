@@ -10,10 +10,6 @@
 int
 main(int argc, char **argv)
 {
-	uint32_t screen_width = 100;
-       	uint32_t screen_height = 100;
-	bool is_fullscreen = false;
-
 	SDL_Init (SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS);
 
 	SDL_GL_SetAttribute (SDL_GL_RED_SIZE, 8);
@@ -33,14 +29,12 @@ main(int argc, char **argv)
 	GameConfig* game_config = new GameConfig ();
 	game_config->init_screen ();
 
-	screen_manager->get_screen_size (screen_width, screen_height, is_fullscreen);
-
-	uint32_t flags_window = SDL_WINDOW_OPENGL | (is_fullscreen ? SDL_WINDOW_FULLSCREEN: 0);
+	uint32_t flags_window = SDL_WINDOW_OPENGL | (screen_manager->is_fullscreen ? SDL_WINDOW_FULLSCREEN: 0);
 
 	SDL_Window *window = SDL_CreateWindow ("TileNinjaHackers",
 			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-			screen_width,
-			screen_height,
+			screen_manager->width,
+			screen_manager->height,
 			flags_window
 			);
 
