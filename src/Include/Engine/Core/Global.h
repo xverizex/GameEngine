@@ -4,10 +4,17 @@
 namespace Global {
 
 	template<typename T>
-	void set_singleton (T* sm);
+	static T* m;
 
 	template<typename T>
-	T* get_singleton ();
+	void set_singleton (T* sm) {
+		m<T> = sm;
+	}
+
+	template<typename T>
+	T* get_singleton () {
+		return m<T>;
+	}
 }
 
 #endif
