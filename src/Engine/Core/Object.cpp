@@ -1,9 +1,10 @@
-#include <Engine/Core/Object.h>
-#include <Engine/Core/ShaderManager.h>
-#include <Engine/Core/ScreenManager.h>
-#include <Engine/Core/Global.h>
+#include <Core/Object.h>
 #include <string.h>
-#include <GLES3/gl3.h>
+#include <Engine/Core/Global.h>
+#include <Engine/Core/Downloader.h>
+#include <Engine/Core/ShaderManager.h>
+
+namespace Engine {
 
 Object::Object(TYPE_OBJECT type, uint32_t res)
 {
@@ -19,6 +20,9 @@ Object::Object(TYPE_OBJECT type, uint32_t res)
 		case TYPE_OBJECT::UI:
 			initUI(res);
 			break;
+		case TYPE_OBJECT::SPRITE:
+			initSprite(res);
+			break;
 	}
 }
 
@@ -31,6 +35,76 @@ Object::Object(TYPE_OBJECT type, uint32_t tex, uint32_t width, uint32_t height)
 	mrotate = glm::mat4(1.f);
 	mposition = glm::mat4(0.f);
 	mscale = glm::mat4(1.f);
+
+	switch (type) {
+		case FOREIGN_TEXTURE:
+			initForeignTexture(tex, width, height);
+			break;
+	}
+}
+
+void Object::initForeignTexture(uint32_t res, uint32_t width, uint32_t height)
+{
+	vertexData = new VertexData();
+
+	float ww = static_cast<float>(width);
+	float hh = static_cast<float>(height);
+
+	static float v[30] = {
+		0.f, 0.f, 0.0f, 0.0f, 0.0f,
+		0.f, hh, 0.0f, 0.0f, 1.0f,
+		ww, 0.f, 0.0f, 1.0f, 0.0f,
+		ww, 0.f, 0.0f, 1.0f, 0.0f,
+		ww, hh, 0.0f, 1.0f, 1.0f,
+		0.f, hh, 0.0f, 0.0f, 1.0f
+	};
+
+	vertexData->f = new float*[1];
+	vertexData->size_f = 1;
+	vertexData->tex_sampler = new uint32_t[1];
+	vertexData->tex_sampler[0] = res;
+	vertexData->tex_count = 1;
+	vertexData->tex_width = width;
+	vertexData->tex_height = height;
+	
+	vertexData->f[0] = new float[30];
+	
+	memcpy (vertexData->f[0], v, sizeof(float) * 30);
+
+	ScreenManager* screen_manager = Global::get_singleton<ScreenManager> ();
+	float w = screen_manager->width_float;
+	float h = screen_manager->height_float;
+
+	mprojection = glm::ortho (0.f, w, 0.f, h, -1.0f, 10.f);
+	
+	ShaderManager* shader_manager = Global::get_singleton<ShaderManager>();
+	shader = shader_manager->get_shader(SHADER_SPRITE);
+
+	uint32_t count = vertexData->size_f;
+
+	vao = new uint32_t[count];
+	vbo = new uint32_t[count];
+
+	glGenBuffers (count, vbo);
+	glGenVertexArrays (count, vao);
+	
+	for (int i = 0; i < count; i++) {
+		
+		glBindVertexArray (vao[i]);
+		glBindBuffer (GL_ARRAY_BUFFER, vbo[i]);
+		glBufferData (GL_ARRAY_BUFFER, sizeof (float) * 30, vertexData->f[i], GL_STATIC_DRAW);
+
+		glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, sizeof (float) * 5, (void *) 0);
+		glEnableVertexAttribArray (0);
+		glVertexAttribPointer (1, 2, GL_FLOAT, GL_FALSE, sizeof (float) * 5, (void *) (sizeof(float) * 3));
+		glEnableVertexAttribArray (1);
+
+		glBindBuffer (GL_ARRAY_BUFFER, 0);
+		glBindVertexArray (0);
+
+	}
+	
+	max_vertex = 6;
 }
 
 void Object::setPos(glm::vec3 pos)
@@ -90,15 +164,16 @@ const glm::vec3 &Object::getPosVector() const
 	return vpos;
 }
 
-#include <cstdio>
 
 void Object::resizeMatrix()
 {
-	ScreenManager* screen_manager = Global::get_singleton<ScreenManager> ();
+	AppConfig *app = AppConfig::getInstance();
 
 	switch(typeObject) {
-		default:
-			mprojection = glm::ortho(0.f, screen_manager->width_float, 0.f, screen_manager->height_float, -0.1f, 10.f);
+		case UI:
+		case SPRITE:
+		case FOREIGN_TEXTURE:
+			mprojection = glm::ortho(0.f, app->app_width_float, 0.f, app->app_height_float, -0.1f, 10.f);
 			break;
 	}
 }
@@ -106,8 +181,8 @@ void Object::resizeMatrix()
 void Object::initUI(uint32_t res)
 {
 	ScreenManager* screen_manager = Global::get_singleton<ScreenManager> ();
-	float w = static_cast<float>(screen_manager->width);
-	float h = static_cast<float>(screen_manager->height);
+	float w = screen_manager->width_float;
+	float h = screen_manager->height_float;
 
 	mprojection = glm::ortho(0.f, w, 0.f, h, -0.1f, 10.f);
 
@@ -150,7 +225,54 @@ void Object::initUI(uint32_t res)
 	glBindVertexArray(0);
 }
 
+void Object::initSprite(uint32_t res)
+{
+	vertexData = downloader_load_sprite(static_cast<SPRITE_ASSET>(res));
+
+	ScreenManager* screen_manager = Global::get_singleton<ScreenManager> ();
+	float w = screen_manager->width_float;
+	float h = screen_manager->height_float;
+
+	mprojection = glm::ortho (0.f, w, 0.f, h, -1.0f, 10.f);
+	
+	ShaderManager* shader_manager = Global::get_singleton<ShaderManager>();
+	shader = shader_manager->get_shader(SHADER_SPRITE);
+
+	uint32_t count = vertexData->size_f;
+
+	vao = new uint32_t[count];
+	vbo = new uint32_t[count];
+
+	glGenBuffers (count, vbo);
+	glGenVertexArrays (count, vao);
+	
+	for (int i = 0; i < count; i++) {
+		
+		glBindVertexArray (vao[i]);
+		glBindBuffer (GL_ARRAY_BUFFER, vbo[i]);
+		glBufferData (GL_ARRAY_BUFFER, sizeof (float) * 30, vertexData->f[i], GL_STATIC_DRAW);
+
+		glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, sizeof (float) * 5, (void *) 0);
+		glEnableVertexAttribArray (0);
+		glVertexAttribPointer (1, 2, GL_FLOAT, GL_FALSE, sizeof (float) * 5, (void *) (sizeof(float) * 3));
+		glEnableVertexAttribArray (1);
+
+		glBindBuffer (GL_ARRAY_BUFFER, 0);
+		glBindVertexArray (0);
+
+	}
+	
+	max_vertex = 6;
+}
+
+void Object::initModel(uint32_t res)
+{
+
+}
+
 void Object::tick ()
 {
 	
 }
+
+};
