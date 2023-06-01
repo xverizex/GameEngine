@@ -1,10 +1,11 @@
-#include <Core/Object.h>
+#include <Engine/Core/Object.h>
 #include <string.h>
 #include <Engine/Core/Global.h>
 #include <Engine/Core/Downloader.h>
 #include <Engine/Core/ShaderManager.h>
-
-namespace Engine {
+#include <Engine/Core/ScreenManager.h>
+#include <Game/Core/ShaderList.h>
+#include <GLES3/gl3.h>
 
 Object::Object(TYPE_OBJECT type, uint32_t res)
 {
@@ -167,13 +168,15 @@ const glm::vec3 &Object::getPosVector() const
 
 void Object::resizeMatrix()
 {
-	AppConfig *app = AppConfig::getInstance();
+	ScreenManager* screen_manager = Global::get_singleton<ScreenManager> ();
+	float w = screen_manager->width_float;
+	float h = screen_manager->height_float;
 
 	switch(typeObject) {
 		case UI:
 		case SPRITE:
 		case FOREIGN_TEXTURE:
-			mprojection = glm::ortho(0.f, app->app_width_float, 0.f, app->app_height_float, -0.1f, 10.f);
+			mprojection = glm::ortho(0.f, w, 0.f, h, -0.1f, 10.f);
 			break;
 	}
 }
@@ -227,7 +230,7 @@ void Object::initUI(uint32_t res)
 
 void Object::initSprite(uint32_t res)
 {
-	vertexData = downloader_load_sprite(static_cast<SPRITE_ASSET>(res));
+	vertexData = downloader_load_sprite(res);
 
 	ScreenManager* screen_manager = Global::get_singleton<ScreenManager> ();
 	float w = screen_manager->width_float;
@@ -274,5 +277,3 @@ void Object::tick ()
 {
 	
 }
-
-};

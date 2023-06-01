@@ -3,6 +3,7 @@
 
 enum {
 	SHADER_RECT,
+	SHADER_SPRITE,
 	N_SHADERS
 };
 

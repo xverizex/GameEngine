@@ -1,14 +1,18 @@
 #ifndef ENGINE_OBJECT_HEADER_H
 #define ENGINE_OBJECT_HEADER_H
-#include <stdint.h>
+#include <cstdint>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <Engine/Core/IShader.h>
 #include <Engine/Core/VertexData.h>
+#include <GLES3/gl3.h>
 
 enum TYPE_OBJECT {
 	UI,
+	SPRITE,
+	MODEL,
+	FOREIGN_TEXTURE,
 	N_TYPE_OBJECT
 };
 
@@ -20,6 +24,9 @@ class Object {
 		glm::quat qrotate;
 		glm::vec3 vrotate;
 		void initUI(uint32_t res);
+		void initSprite(uint32_t res);
+		void initModel(uint32_t res);
+		void initForeignTexture(uint32_t res, uint32_t width, uint32_t height);
 	protected:
 		uint32_t typeObject;
 		glm::mat4 mposition;
@@ -31,9 +38,9 @@ class Object {
 
 		uint32_t *vbo;
 		uint32_t typeShapeRender;
+		glm::vec3 vpos;
 		uint32_t max_vertex;
 	public:
-		glm::vec3 vpos;
 		uint32_t *vao;
 		VertexData *vertexData;
 		uint32_t getTypeObject() const;
