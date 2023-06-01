@@ -7,6 +7,9 @@ class GameConfig: public GlobalConfig {
 	public:
 		void init_shaders () override;
 		void init_screen () override;
+		void list_of_levels () override;
+		void entry_point () override;
+		void switch_level () override;
 };
 
 #endif

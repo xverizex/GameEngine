@@ -12,11 +12,13 @@ set (SOURCES_ENGINE
 	Engine/Core/UI.cpp
 	Engine/Core/Object.cpp
 	Engine/UI/Rect.cpp
+	Engine/Core/Downloader.cpp
 	)
 
 set (SOURCES_GAME
 	Game/Core/GameConfig.cpp
 	Game/Shaders/ShaderRect.cpp
+	Game/Levels/GameLevel.cpp
 	)
 
 add_executable (${PROJECT_NAME} ${SOURCES_GAME} ${SOURCES_ENGINE})

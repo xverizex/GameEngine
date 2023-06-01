@@ -45,12 +45,14 @@ main(int argc, char **argv)
 
 	Global::set_singleton (shader_manager);
 
-
 	game_config->init_shaders ();
+	game_config->list_of_levels ();
+	game_config->entry_point ();
 
 	SDL_Event event;
 
 	while (1) {
+
 		const uint8_t *key = SDL_GetKeyboardState (NULL);
 		if (key[SDL_SCANCODE_Q])
 			exit (0);
@@ -59,8 +61,16 @@ main(int argc, char **argv)
 
 		switch (event.type) {
 			case SDL_MOUSEBUTTONDOWN:
+				{
+					SDL_MouseButtonEvent *ev = (SDL_MouseButtonEvent *) &event;
+					game_config->cur_level->mouse_click (ev->x, screen_manager->height - ev->y);
+				}
 				break;
 		}
+
+		game_config->cur_level->tick ();
+
+		game_config->cur_level->render ();
 
 		SDL_GL_SwapWindow (window);
 

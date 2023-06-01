@@ -4,7 +4,10 @@
 #include <Engine/Core/ScreenManager.h>
 #include <Game/Core/ShaderList.h>
 #include <Game/Shaders/Shaders.h>
+#include <Game/Core/LevelsEnum.h>
 #include <vector>
+
+#include <Game/Levels/GameLevel.h>
 
 void GameConfig::init_shaders ()
 {
@@ -20,5 +23,25 @@ void GameConfig::init_screen ()
 {
 	ScreenManager* screen_manager = Global::get_singleton<ScreenManager> ();
 
-	screen_manager->set_screen_size (600, 1024, false);
+	screen_manager->set_screen_size (1024, 1024, false);
+}
+
+void GameConfig::list_of_levels ()
+{
+	n_levels.resize (N_LEVELS);
+	n_levels[LEVEL_GAME] = new GameLevel ();
+}
+
+void GameConfig::entry_point ()
+{
+	cur_level = n_levels[LEVEL_GAME];
+
+	cur_level->load_assets ();
+}
+
+void GameConfig::switch_level ()
+{
+	cur_level->unload_assets ();
+	cur_level = n_levels[cur_level->new_level];
+	cur_level->load_assets ();
 }
