@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstdint>
 #include <png++/png.hpp>
 
 int main (int argc, char **argv) {
