@@ -1,8 +1,12 @@
 #include <cstdio>
+#include <cstdint>
 #include <png++/png.hpp>
 
 int main (int argc, char **argv) {
-	if (argc < 4) return -1;
+	if (argc < 4) {
+		printf ("[total] [name without '_'] [output filename]\n");
+		return -1;
+	}
 
 	int total = atoi (argv[1]);
 	char *name = argv[2];
