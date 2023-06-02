@@ -1,7 +1,6 @@
 #include <Engine/UI/Rect.h>
 #include <Engine/Core/ShaderManager.h>
 #include <Game/Core/ShaderList.h>
-#include <Engine/Core/Global.h>
 #include <cstring>
 #include <GLES3/gl3.h>
 
@@ -9,14 +8,14 @@ Rect::Rect(): UI()
 {
 	width = 0;
 	height = 0;
-	ShaderManager* shader_manager = Global::get_singleton<ShaderManager> ();
+	ShaderManager* shader_manager = ShaderManager::get_instance ();
 	shader = shader_manager->get_shader(SHADER_RECT);
 }
 
 Rect::Rect(uint32_t _width, uint32_t _height)
 {
 	setSize(_width, _height);
-	ShaderManager* shader_manager = Global::get_singleton<ShaderManager> ();
+	ShaderManager* shader_manager = ShaderManager::get_instance ();
 	shader = shader_manager->get_shader(SHADER_RECT);
 }
 

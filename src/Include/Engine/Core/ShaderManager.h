@@ -14,7 +14,8 @@ struct ShaderInfoFile {
 
 class ShaderManager {
 	public:
-		ShaderManager (const uint32_t count);
+		static ShaderManager* get_instance ();
+		void set_shader_size (const uint32_t count);
 
 		void set_shaders_and_compile (std::vector<ShaderInfoFile>& list);
 

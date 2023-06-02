@@ -1,6 +1,13 @@
 #include <Engine/Core/ScreenManager.h>
 #include <SDL2/SDL.h>
 
+ScreenManager* ScreenManager::get_instance ()
+{
+	static ScreenManager* instance = new ScreenManager ();
+
+	return instance;
+}
+
 void ScreenManager::set_screen_size (uint32_t _width, uint32_t _height, bool _is_fullscreen)
 {
 	width = _width;

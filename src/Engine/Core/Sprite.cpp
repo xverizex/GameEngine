@@ -1,6 +1,4 @@
-#include <Core/Sprite.h>
-
-namespace Engine {
+#include <Engine/Core/Sprite.h>
 
 Sprite::Sprite(uint32_t res): Object(SPRITE, res)
 {
@@ -21,7 +19,3 @@ void Sprite::resizeMatrix()
 {
 	Object::resizeMatrix();
 }
-
-};
-
-	

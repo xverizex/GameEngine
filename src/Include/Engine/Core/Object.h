@@ -56,6 +56,7 @@ class Object {
 		virtual void setPos(glm::vec3 pos);
 		virtual void rotate(glm::vec3 rot);
 		virtual void resizeMatrix();
+		virtual void set_width (float w);
 		const glm::vec3 &getPos();
 		const glm::vec3 &getRotateVector() const;
 		virtual void tick();

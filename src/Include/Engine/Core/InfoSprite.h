@@ -1,9 +1,10 @@
 #ifndef INFO_SPRITE_H
 #define INFO_SPRITE_H
 #include <cstdint>
+#include <string>
 
 struct InfoSprite {
-	char *path;
+	std::string path;
 	uint32_t index;
 };
 

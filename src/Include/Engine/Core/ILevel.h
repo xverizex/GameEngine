@@ -1,15 +1,12 @@
 #ifndef ILEVEL_H
 #define ILEVEL_H
 #include <cstdint>
-#include <Engine/Core/Global.h>
 
 class GameConfig;
 
 class ILevel {
 	public:
-		ILevel () {
-			cfg = Global::get_singleton<GameConfig> ();
-		}
+		ILevel ();
 		virtual void load_assets () = 0;
 		virtual void unload_assets () = 0;
 		virtual void tick () = 0;

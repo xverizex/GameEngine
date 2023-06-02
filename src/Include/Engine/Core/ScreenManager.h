@@ -5,6 +5,7 @@
 
 class ScreenManager {
 	public:
+		static ScreenManager* get_instance ();
 		void set_screen_size (uint32_t width, uint32_t height, bool is_fullscreen);
 		void set_desktop_size (uint32_t indx);
 

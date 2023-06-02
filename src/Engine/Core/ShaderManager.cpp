@@ -5,7 +5,14 @@
 #include <unistd.h>
 #include <cstdio>
 
-ShaderManager::ShaderManager (const uint32_t count)
+ShaderManager* ShaderManager::get_instance ()
+{
+	static ShaderManager* instance = new ShaderManager ();
+
+	return instance;
+}
+
+void ShaderManager::set_shader_size (const uint32_t count)
 {
 	programs = new uint32_t[count];
 	if (!programs) {

@@ -1,14 +1,16 @@
-#include <ShaderClasses/Shader2DSprite.h>
-#include <Core/Shaders.h>
-#include <glad/glad.h>
-#include <Core/Sprite.h>
+#include <Game/Shaders/Shader2DSprite.h>
+#include <Engine/Core/Sprite.h>
+#include <Engine/Core/ShaderManager.h>
+#include <Game/Core/ShaderList.h>
+#include <GLES3/gl3.h>
 #include <stdio.h>
 #include <time.h>
 
 
 void Shader2DSprite::init()
 {
-	program = getProgram(SHADER_2D_SPRITE);
+	ShaderManager* shader_manager = ShaderManager::get_instance ();
+	program = shader_manager->get_program(SHADER_SPRITE);
 
 	glUseProgram(program);
 

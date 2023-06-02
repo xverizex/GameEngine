@@ -2,7 +2,6 @@
 #include <GLES3/gl3.h>
 #include <stdint.h>
 #include <Engine/Core/ShaderManager.h>
-#include <Engine/Core/Global.h>
 #include <Engine/Core/ScreenManager.h>
 #include <Game/Core/GameConfig.h>
 #include <Game/Core/ShaderList.h>
@@ -23,10 +22,9 @@ main(int argc, char **argv)
 	SDL_GL_SetAttribute (SDL_GL_CONTEXT_MINOR_VERSION, 0);
 	SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 
-	ScreenManager* screen_manager = new ScreenManager ();
-	Global::set_singleton (screen_manager);
+	ScreenManager* screen_manager = ScreenManager::get_instance ();
 
-	GameConfig* game_config = new GameConfig ();
+	GameConfig* game_config = GameConfig::get_instance ();
 	game_config->init_screen ();
 
 	uint32_t flags_window = SDL_WINDOW_OPENGL | (screen_manager->is_fullscreen ? SDL_WINDOW_FULLSCREEN: 0);
@@ -41,9 +39,8 @@ main(int argc, char **argv)
 
 	SDL_GLContext ctx = SDL_GL_CreateContext (window);
 
-	ShaderManager* shader_manager = new ShaderManager (N_SHADERS);
-
-	Global::set_singleton (shader_manager);
+	ShaderManager* shader_manager = ShaderManager::get_instance ();
+	shader_manager->set_shader_size (N_SHADERS);
 
 	game_config->init_shaders ();
 	game_config->list_of_levels ();

@@ -2,6 +2,8 @@
 #define GAME_LEVEL_H
 
 #include <Engine/Core/ILevel.h>
+#include <Engine/Core/Sprite.h>
+#include <vector>
 
 class GameLevel: public ILevel {
 	public:
@@ -11,6 +13,8 @@ class GameLevel: public ILevel {
 		void tick () override;
 		void mouse_click (int x, int y) override;
 		void render () override;
+
+		std::vector<Sprite*> sprites;
 };
 
 #endif

@@ -1,6 +1,5 @@
 #include <Engine/Core/Object.h>
 #include <string.h>
-#include <Engine/Core/Global.h>
 #include <Engine/Core/Downloader.h>
 #include <Engine/Core/ShaderManager.h>
 #include <Engine/Core/ScreenManager.h>
@@ -72,13 +71,13 @@ void Object::initForeignTexture(uint32_t res, uint32_t width, uint32_t height)
 	
 	memcpy (vertexData->f[0], v, sizeof(float) * 30);
 
-	ScreenManager* screen_manager = Global::get_singleton<ScreenManager> ();
+	ScreenManager* screen_manager = ScreenManager::get_instance ();
 	float w = screen_manager->width_float;
 	float h = screen_manager->height_float;
 
 	mprojection = glm::ortho (0.f, w, 0.f, h, -1.0f, 10.f);
 	
-	ShaderManager* shader_manager = Global::get_singleton<ShaderManager>();
+	ShaderManager* shader_manager = ShaderManager::get_instance ();
 	shader = shader_manager->get_shader(SHADER_SPRITE);
 
 	uint32_t count = vertexData->size_f;
@@ -168,7 +167,7 @@ const glm::vec3 &Object::getPosVector() const
 
 void Object::resizeMatrix()
 {
-	ScreenManager* screen_manager = Global::get_singleton<ScreenManager> ();
+	ScreenManager* screen_manager = ScreenManager::get_instance ();
 	float w = screen_manager->width_float;
 	float h = screen_manager->height_float;
 
@@ -183,7 +182,7 @@ void Object::resizeMatrix()
 
 void Object::initUI(uint32_t res)
 {
-	ScreenManager* screen_manager = Global::get_singleton<ScreenManager> ();
+	ScreenManager* screen_manager = ScreenManager::get_instance ();
 	float w = screen_manager->width_float;
 	float h = screen_manager->height_float;
 
@@ -228,17 +227,48 @@ void Object::initUI(uint32_t res)
 	glBindVertexArray(0);
 }
 
+void Object::set_width (float www)
+{
+	ScreenManager* screen_manager = ScreenManager::get_instance ();
+	float aspect = screen_manager->width_float / screen_manager->height_float;
+
+	float ww = www;
+	float hh = www / aspect;
+
+	static float v[30] = {
+		0.f, 0.f, 0.0f, 0.0f, 0.0f,
+		0.f, hh, 0.0f, 0.0f, 1.0f,
+		ww, 0.f, 0.0f, 1.0f, 0.0f,
+		ww, 0.f, 0.0f, 1.0f, 0.0f,
+		ww, hh, 0.0f, 1.0f, 1.0f,
+		0.f, hh, 0.0f, 0.0f, 1.0f
+	};
+
+	for (uint32_t i = 0; i < vertexData->size_f; i++) {
+		memcpy(vertexData->f[0], v, sizeof(float) * 30);
+
+		glBindVertexArray (vao[i]);
+		glBindBuffer (GL_ARRAY_BUFFER, vbo[i]);
+		glBufferSubData (GL_ARRAY_BUFFER, 0, sizeof (float) * 30, vertexData->f[i]);
+	}
+}
+
 void Object::initSprite(uint32_t res)
 {
 	vertexData = downloader_load_sprite(res);
 
-	ScreenManager* screen_manager = Global::get_singleton<ScreenManager> ();
+	ScreenManager* screen_manager = ScreenManager::get_instance ();
 	float w = screen_manager->width_float;
 	float h = screen_manager->height_float;
 
-	mprojection = glm::ortho (0.f, w, 0.f, h, -1.0f, 10.f);
+	float aspect = screen_manager->width_float / screen_manager->height_float;
+
+	float num = 20.f;
+	float size = 64.f;
+
+	mprojection = glm::ortho (0.f, size * num * aspect, 0.f, size * num, -1.0f, 10.f);
 	
-	ShaderManager* shader_manager = Global::get_singleton<ShaderManager>();
+	ShaderManager* shader_manager = ShaderManager::get_instance();
 	shader = shader_manager->get_shader(SHADER_SPRITE);
 
 	uint32_t count = vertexData->size_f;

@@ -39,7 +39,8 @@ void downloader_download_all_sprites_without_progressbar (std::vector<InfoSprite
 
 void downloader_download_each_sprite (InfoSprite& item)
 {
-	load_sprite (item.path, item.index);
+	std::string path = "assets/" + item.path + ".texture";
+	load_sprite (path.c_str(), item.index);
 }
 
 

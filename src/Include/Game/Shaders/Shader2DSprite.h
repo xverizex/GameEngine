@@ -1,10 +1,8 @@
-#ifndef ENGINE_SHADER_2D_SPRITE_HEADER_H
-#define ENGINE_SHADER_2D_SPRITE_HEADER_H
-#include <Core/IShader.h>
+#ifndef SHADER_2D_SPRITE_H
+#define SHADER_2D_SPRITE_H
+#include <Engine/Core/IShader.h>
 
 #include <stdint.h>
-
-namespace Engine {
 
 class Shader2DSprite: public IShader {
 	public:
@@ -19,8 +17,6 @@ class Shader2DSprite: public IShader {
 		uint32_t uniform_scale;
 		uint32_t uniform_sampler;
 		uint32_t uniform_rotate;
-};
-
 };
 
 #endif

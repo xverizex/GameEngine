@@ -1,5 +1,4 @@
 #include <Game/Shaders/ShaderRect.h>
-#include <Engine/Core/Global.h>
 #include <Engine/Core/ShaderManager.h>
 #include <Game/Core/ShaderList.h>
 #include <GLES3/gl3.h>
@@ -7,7 +6,7 @@
 
 void ShaderRect::init()
 {
-	ShaderManager* shader_manager = Global::get_singleton<ShaderManager> ();
+	ShaderManager* shader_manager = ShaderManager::get_instance ();
 
 	program = shader_manager->get_program(SHADER_RECT);
 

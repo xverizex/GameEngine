@@ -10,6 +10,8 @@ class GameConfig: public GlobalConfig {
 		void list_of_levels () override;
 		void entry_point () override;
 		void switch_level () override;
+
+		static GameConfig* get_instance ();
 };
 
 #endif

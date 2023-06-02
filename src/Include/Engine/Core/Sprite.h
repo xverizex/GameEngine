@@ -1,6 +1,7 @@
 #ifndef ENGINE_SPRITE_HEADER_H
 #define ENGINE_SPRITE_HEADER_H
-#include <Core/Object.h>
+#include <Engine/Core/Object.h>
+#include <cstdint>
 
 class Shader2DSprite;
 

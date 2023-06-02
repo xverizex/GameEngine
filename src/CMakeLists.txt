@@ -13,12 +13,16 @@ set (SOURCES_ENGINE
 	Engine/Core/Object.cpp
 	Engine/UI/Rect.cpp
 	Engine/Core/Downloader.cpp
+	Engine/Core/Sprite.cpp
+	Engine/Core/ILevel.cpp
 	)
 
 set (SOURCES_GAME
 	Game/Core/GameConfig.cpp
 	Game/Shaders/ShaderRect.cpp
+	Game/Shaders/Shader2DSprite.cpp
 	Game/Levels/GameLevel.cpp
+	Game/Sprites/Tile.cpp
 	)
 
 add_executable (${PROJECT_NAME} ${SOURCES_GAME} ${SOURCES_ENGINE})
