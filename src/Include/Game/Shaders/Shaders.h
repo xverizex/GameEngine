@@ -3,6 +3,6 @@
 
 #include <Game/Shaders/ShaderRect.h>
 #include <Game/Shaders/Shader2DSprite.h>
-
+#include <Game/Shaders/Shader2DSpriteWithCamera.h>
 
 #endif

@@ -1,7 +1,7 @@
 #include <Engine/Core/UI.h>
 
 
-UI::UI(): Object(TYPE_OBJECT::UI, 0)
+UI::UI(): Object(TYPE_OBJECT::UI, 0, 0)
 {
 
 }

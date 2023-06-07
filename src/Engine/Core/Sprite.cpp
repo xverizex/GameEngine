@@ -1,6 +1,6 @@
 #include <Engine/Core/Sprite.h>
 
-Sprite::Sprite(uint32_t res): Object(SPRITE, res)
+Sprite::Sprite(uint32_t res, uint32_t count_div): Object(SPRITE, res, count_div)
 {
 	cur_tex = 0;
 }

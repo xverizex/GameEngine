@@ -1,9 +1,13 @@
 #include <Engine/Core/ShaderManager.h>
 #include <Engine/Core/IShader.h>
 #include <Engine/Utils/File.h>
-#include <GLES3/gl3.h>
+#include <asgl.h>
+#ifdef LINUX
 #include <unistd.h>
+#endif
+#include <Game/Core/Defines.h>
 #include <cstdio>
+#include <Game/Core/ResEnum.h>
 
 ShaderManager* ShaderManager::get_instance ()
 {
@@ -44,19 +48,21 @@ void ShaderManager::set_shaders_and_compile (std::vector<ShaderInfoFile>& list)
 {
 	for (ShaderInfoFile shader_info: list) {
 		uint32_t idx = shader_info.index_program;
-		programs[idx] = create_program (shader_info.name);
+		programs[idx] = create_program (shader_info.enum_vert, shader_info.enum_frag);
 		shaders[idx] = shader_info.shader;
-		shaders[idx]->init ();
+		if (shader_info.shader)
+			shaders[idx]->init ();
 	}
 }
 
-uint32_t ShaderManager::create_shader (int type, std::string& name)
+uint32_t ShaderManager::create_shader (int type, uint64_t enum_pos)
 {
 	uint32_t shader = glCreateShader (type);
 
-	uint8_t* data = Utils::file_get_data (name);
+	uint64_t size;
+	uint8_t* data = Utils::file_get_game_data (enum_pos, size, R_SHADERS);
 	if (!data) {
-		fprintf (stderr, "%s: file not found\n", name.c_str());
+		fprintf (stderr, "%lx: file not found\n", enum_pos);
 		exit (-1);
 	}
 
@@ -84,13 +90,10 @@ uint32_t ShaderManager::create_shader (int type, std::string& name)
 	return shader;
 }
 
-uint32_t ShaderManager::create_program (std::string& name)
+uint32_t ShaderManager::create_program (uint64_t enum_vert, uint64_t enum_frag)
 {
-	std::string vertex_str = name + ".vert";
-	std::string fragment_str = name + ".frag";
-
-	uint32_t vertex = create_shader (GL_VERTEX_SHADER, vertex_str);
-	uint32_t fragment = create_shader (GL_FRAGMENT_SHADER, fragment_str);
+	uint32_t vertex = create_shader (GL_VERTEX_SHADER, enum_vert);
+	uint32_t fragment = create_shader (GL_FRAGMENT_SHADER, enum_frag);
 
 	uint32_t program = glCreateProgram ();
 

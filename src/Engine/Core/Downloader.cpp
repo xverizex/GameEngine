@@ -2,8 +2,11 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <GLES3/gl3.h>
+#include <asgl.h>
 #include <Engine/Core/Downloader.h>
+#include <Game/Core/Defines.h>
+#include <Engine/Utils/File.h>
+#include <Game/Core/ResEnum.h>
 
 static uint32_t count_sprite_array;
 
@@ -13,7 +16,7 @@ static VertexData **vsprites_center;
 
 static void load_model (const char *filename, uint32_t asset);
 static void load_textures (const char *filename, uint32_t asset);
-static void load_sprite (const char *filename, uint32_t asset);
+static void load_sprite (uint64_t);
 
 void downloader_clear_memory_of_sprites ()
 {
@@ -39,8 +42,11 @@ void downloader_download_all_sprites_without_progressbar (std::vector<InfoSprite
 
 void downloader_download_each_sprite (InfoSprite& item)
 {
+#if 0
 	std::string path = "assets/" + item.path + ".texture";
 	load_sprite (path.c_str(), item.index);
+#endif
+	load_sprite (item.enum_pos);
 }
 
 
@@ -139,23 +145,13 @@ static void load_model (const char *filename, uint32_t asset)
 
 
 
-static void load_sprite (const char *filename, uint32_t asset)
+static void load_sprite (uint64_t enum_pos)
 {
-	vsprites[asset] = new VertexData();
+	uint32_t asset = enum_pos;
+	vsprites[enum_pos] = new VertexData();
 
-	FILE *fp = fopen (filename, "r");
-
-	uint8_t *file;
-
-	fseek (fp, 0, SEEK_END);
-	uint64_t size_file = ftell (fp);
-	fseek (fp, 0, SEEK_SET);
-
-	file = new uint8_t[size_file];
-	fread (file, size_file, 1, fp);
-	fclose (fp);
-
-
+	uint64_t size_file;
+	uint8_t *file = Utils::file_get_game_data (enum_pos, size_file, R_TEXTURES);
 
 	const int LTBE = 0;
         const int COUNT = 1;
@@ -205,10 +201,12 @@ static void load_sprite (const char *filename, uint32_t asset)
                 glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
                 glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
                 glBindTexture (GL_TEXTURE_2D, 0);
-                delete[] data[i];
+                //delete[] data[i];
 	}
 
-	delete[] data;
+	//delete[] data;
+	
+	vsprites[asset]->data = data;
 
 	float ww = static_cast<float>(width);
 	float hh = static_cast<float>(height);

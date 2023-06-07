@@ -50,3 +50,5 @@ void GameConfig::switch_level ()
 ```
 
 You are self which shaders will be added in game, see *GameConfig::init_shaders*.
+
+Now, you should put all resource files into `pre_assets`. See `utils/build_data_file`.

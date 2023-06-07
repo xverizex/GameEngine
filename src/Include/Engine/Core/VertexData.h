@@ -3,7 +3,8 @@
 #include <stdint.h>
 
 struct VertexData {
-	float **f;
+	~VertexData ();
+	float **f = {nullptr};
 	uint32_t size_f;
 	uint32_t max_vertex;
 	uint32_t count_v;
@@ -11,6 +12,7 @@ struct VertexData {
 	uint32_t tex_width;
 	uint32_t tex_height;
 	uint32_t *tex_sampler;
+	uint8_t **data = {nullptr};
 };
 
 #endif

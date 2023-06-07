@@ -22,5 +22,9 @@ void ScreenManager::set_desktop_size (uint32_t index)
 	SDL_DisplayMode mode;
 	SDL_GetDesktopDisplayMode (index, &mode);
 
+#if WIN32
+	set_screen_size (mode.w, mode.h, false);
+#else
 	set_screen_size (mode.w, mode.h, true);
+#endif
 }

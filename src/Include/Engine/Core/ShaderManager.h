@@ -8,8 +8,9 @@ class IShader;
 
 struct ShaderInfoFile {
 	uint32_t index_program;
-	std::string name;
 	IShader* shader;
+	uint64_t enum_vert;
+	uint64_t enum_frag;
 };
 
 class ShaderManager {
@@ -29,8 +30,8 @@ class ShaderManager {
 		uint32_t max_count;
 
 	private:
-		uint32_t create_program (std::string& name);
-		uint32_t create_shader (int type, std::string& name);
+		uint32_t create_program (uint64_t enum_vert, uint64_t enum_frag);
+		uint32_t create_shader (int type, uint64_t enum_pos);
 };
 
 #endif

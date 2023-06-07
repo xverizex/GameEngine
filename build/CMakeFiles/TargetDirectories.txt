@@ -1,5 +1,0 @@
-/home/cf/code/template_engine/build/CMakeFiles/edit_cache.dir
-/home/cf/code/template_engine/build/CMakeFiles/rebuild_cache.dir
-/home/cf/code/template_engine/build/src/CMakeFiles/Game.dir
-/home/cf/code/template_engine/build/src/CMakeFiles/edit_cache.dir
-/home/cf/code/template_engine/build/src/CMakeFiles/rebuild_cache.dir

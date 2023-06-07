@@ -4,8 +4,7 @@
 #include <string>
 
 struct InfoSprite {
-	std::string path;
-	uint32_t index;
+	uint64_t enum_pos;
 };
 
 #endif
