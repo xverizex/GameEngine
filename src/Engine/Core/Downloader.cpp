@@ -109,24 +109,6 @@ VertexData *downloader_object_load (uint32_t asset)
 	return vdata[asset];
 }
 
-static uint64_t swap_little_big_engian_bigint (uint64_t num)
-{
-        return
-                (((num >> 56) & 0xff) |
-                 ((num >> 40) & 0xff00) |
-                 ((num >> 24) & 0xff0000) |
-                 ((num >>  8) & 0xff000000) |
-                 ((num <<  8) & 0xff00000000) |
-                 ((num << 24) & 0xff0000000000) |
-                 ((num << 40) & 0xff000000000000) |
-                 ((num << 56) & 0xff00000000000000)
-                );
-}
-
-static int swap_little_big_engian (int num)
-{
-        return (((num >> 24) & 0xff) | ((num << 8) & 0xff0000) | ((num >> 8) & 0xff00) | ((num << 24) & 0xff000000));
-}
 
 static void load_model (const char *filename, uint32_t asset)
 {
@@ -136,7 +118,6 @@ static void load_model (const char *filename, uint32_t asset)
 	int size;
 	fread (&lb, sizeof (int), 1, fp);
 	fread (&count, sizeof (int), 1, fp);
-	
 
 	vdata[asset] = new VertexData();
 	vdata[asset]->f = new float*[count];
@@ -178,7 +159,7 @@ static void load_sprite (uint64_t enum_pos)
 
         if (*pack[LTBE] != 1) {
                 for (int i = 1; i < 4; i++) {
-                        *pack[i] = swap_little_big_engian (*pack[i]);
+                        *pack[i] = Utils::swap_little_big_engian (*pack[i]);
                 }
         }
 
@@ -272,7 +253,7 @@ static void load_sprite_center (const char *filename, uint32_t asset)
 
         if (*pack[LTBE] != 1) {
                 for (int i = 1; i < 4; i++) {
-                        *pack[i] = swap_little_big_engian (*pack[i]);
+                        *pack[i] = Utils::swap_little_big_engian (*pack[i]);
                 }
         }
 
@@ -383,7 +364,7 @@ static void load_textures (const char *filename, uint32_t asset)
 
         if (*pack[LTBE] != 1) {
                 for (int i = 1; i < 4; i++) {
-                        *pack[i] = swap_little_big_engian (*pack[i]);
+                        *pack[i] = Utils::swap_little_big_engian (*pack[i]);
                 }
         }
 
