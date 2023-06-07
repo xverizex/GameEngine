@@ -109,6 +109,19 @@ VertexData *downloader_object_load (uint32_t asset)
 	return vdata[asset];
 }
 
+static uint64_t swap_little_big_engian_bigint (uint64_t num)
+{
+        return
+                (((num >> 56) & 0xff) |
+                 ((num >> 40) & 0xff00) |
+                 ((num >> 24) & 0xff0000) |
+                 ((num >>  8) & 0xff000000) |
+                 ((num <<  8) & 0xff00000000) |
+                 ((num << 24) & 0xff0000000000) |
+                 ((num << 40) & 0xff000000000000) |
+                 ((num << 56) & 0xff00000000000000)
+                );
+}
 
 static int swap_little_big_engian (int num)
 {
