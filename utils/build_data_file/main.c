@@ -13,21 +13,13 @@
  * FONTS = 1
  * TEXTURES = 2
  */
-/*
- * Example to compose data.list file
- * sprite.vert 0
- * sprite.frag 0
- * hacker.texture 2
- * terminus.ttf 1
- *
- * As you can see, first name is name of resource, second number is type { SHADERS, FONTS, TEXTURES } as you can see above.
- */
 
 #define POS_SHADERS                (0 * sizeof (uint64_t))
 #define POS_FONTS                  (1 * sizeof (uint64_t))
 #define POS_TEXTURES               (2 * sizeof (uint64_t))
 
 struct file_info {
+	uint32_t num;
 	char name[255];
 	char define_name[255];
 };
@@ -159,15 +151,17 @@ int main (int argc, char **argv)
 
 	char line[512];
 	while (fgets (line, 512, data_list)) {
+		uint32_t num;
 		char name[256];
 		char defined_name[256] = {0, };
 		uint32_t type;
-		sscanf (line, "%s %d", name, &type);
+		sscanf (line, "%d %s %d", &num, name, &type);
 
 		make_defined_name (defined_name, name);
 
 		switch (type) {
 			case 0:
+				fs[fs_count_file_info].num = num;
 				strncpy (fs[fs_count_file_info].name, name, strlen (name));
 				strncpy (fs[fs_count_file_info].define_name, defined_name, strlen (defined_name));
 				fs_count_file_info++;
@@ -175,6 +169,7 @@ int main (int argc, char **argv)
 					fs_restructure_blocks ();
 				break;
 			case 1:
+				fffs[fffs_count_file_info].num = num;
 				strncpy (fffs[fffs_count_file_info].name, name, strlen (name));
 				strncpy (fffs[fffs_count_file_info].define_name, defined_name, strlen (defined_name));
 				fffs_count_file_info++;
@@ -182,6 +177,7 @@ int main (int argc, char **argv)
 					fffs_restructure_blocks ();
 				break;
 			case 2:
+				fts[fts_count_file_info].num = num;
 				strncpy (fts[fts_count_file_info].name, name, strlen (name));
 				strncpy (fts[fts_count_file_info].define_name, defined_name, strlen (defined_name));
 				fts_count_file_info++;
@@ -199,6 +195,9 @@ int main (int argc, char **argv)
 	FILE *log = fopen ("pack.log", "w");
 	FILE *dt = fopen (NAME_DATA_FILE, "w");
 
+	uint64_t little_big_engian = 1L;
+	fwrite (&little_big_engian, sizeof (uint64_t), 1, dt);
+
 	uint64_t group = 0L;
 	for (int i = 0; i < 3; i++) {
 		fwrite (&group, sizeof (uint64_t), 1, dt);
@@ -212,7 +211,7 @@ int main (int argc, char **argv)
 	 * write shaders positions and tell group where it location
 	 */
 	group_pos_shaders = ftell (dt);
-	fseek (dt, POS_SHADERS, SEEK_SET);
+	fseek (dt, sizeof (uint64_t) + POS_SHADERS, SEEK_SET);
 	fwrite (&group_pos_shaders, sizeof (uint64_t), 1, dt);
 	fseek (dt, group_pos_shaders, SEEK_SET);
 
@@ -221,7 +220,7 @@ int main (int argc, char **argv)
 	}
 
 	group_pos_fonts = ftell (dt);
-	fseek (dt, POS_FONTS, SEEK_SET);
+	fseek (dt, sizeof (uint64_t) + POS_FONTS, SEEK_SET);
 	fwrite (&group_pos_fonts, sizeof (uint64_t), 1, dt);
 	fseek (dt, group_pos_fonts, SEEK_SET);
 
@@ -230,7 +229,7 @@ int main (int argc, char **argv)
 	}
 
 	group_pos_textures = ftell (dt);
-	fseek (dt, POS_TEXTURES, SEEK_SET);
+	fseek (dt, sizeof (uint64_t) + POS_TEXTURES, SEEK_SET);
 	fwrite (&group_pos_textures, sizeof (uint64_t), 1, dt);
 	fseek (dt, group_pos_textures, SEEK_SET);
 
