@@ -1,5 +1,5 @@
-#ifndef ENGINE_OBJECT_HEADER_H
-#define ENGINE_OBJECT_HEADER_H
+#ifndef OBJECT_H_H
+#define OBJECT_H_H
 #include <cstdint>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

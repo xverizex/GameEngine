@@ -6,6 +6,7 @@
 
 class ShaderRect: public IShader {
 	public:
+        ~ShaderRect() override;
 		void init () override;
 		void render (void *_data) override;
 

@@ -1,7 +1,10 @@
 #include <Engine/Utils/File.h>
 #include <Game/Core/Defines.h>
 #include <Game/Core/ResEnum.h>
-#include <SDL2/SDL.h>
+#include <assdl.h>
+#ifdef __ANDROID__
+#include <android/log.h>
+#endif
 
 namespace Utils {
 
@@ -36,6 +39,26 @@ uint64_t swap_little_big_engian_bigint (uint64_t num)
                 );
 }
 
+SDL_RWops* get_io_file_local (std::string filename, std::string mode)
+{
+#ifdef __ANDROID__
+	const char* path = SDL_AndroidGetExternalStoragePath ();
+	filename = std::string (path) + "/" + filename;
+#endif
+	return SDL_RWFromFile (filename.c_str(), mode.c_str());
+}
+
+SDL_RWops* get_io_file (std::string filename, std::string mode)
+{
+#ifdef __ANDROID__
+	//const char* path = SDL_AndroidGetExternalStoragePath ();
+	//filename = filename;
+#else
+	filename = "assets/" + filename;
+#endif
+	return SDL_RWFromFile (filename.c_str(), mode.c_str());
+}
+
 int swap_little_big_engian (int num)
 {
         return (((num >> 24) & 0xff) | ((num << 8) & 0xff0000) | ((num >> 8) & 0xff00) | ((num << 24) & 0xff000000));
@@ -44,7 +67,14 @@ int swap_little_big_engian (int num)
 uint8_t* file_get_game_data (uint64_t enum_pos, uint64_t& ss, uint64_t group_pos)
 {
 	ss = 0L;
-	std::string filename = "assets/" GAME_DATA;
+	std::string filename;
+
+#ifdef __ANDROID__
+	//const char* path = SDL_AndroidGetExternalStoragePath ();
+	filename = GAME_DATA;
+#else
+	filename = "assets/" + std::string(GAME_DATA);
+#endif
 
 	SDL_RWops* io = SDL_RWFromFile (filename.c_str(), "rb");
 	if (io != nullptr) {
@@ -71,7 +101,14 @@ uint8_t* file_get_game_data (uint64_t enum_pos, uint64_t& ss, uint64_t group_pos
 		io->close (io);
 		data[size] = 0;
 		return data;
+#ifdef __ANDROID__
+	} else {
+		__android_log_print (ANDROID_LOG_ERROR, "com.xverizex.hex_frontier", "not found game data file: %s\n", filename.c_str());
+		exit (-1);
 	}
+#else
+	}
+#endif
 
 	return nullptr;
 }

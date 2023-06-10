@@ -27,6 +27,27 @@ void ShaderManager::set_shader_size (const uint32_t count)
 	max_count = count;
 }
 
+void ShaderManager::free_programs ()
+{
+#if 1
+    for (int i = 0; i < max_count; i++) {
+        glDeleteProgram(programs[i]);
+    }
+
+#endif
+    if (max_count)
+        delete[] programs;
+
+#if 1
+    for (int i = 0; i < max_count; i++) {
+        delete shaders[i];
+    }
+
+    delete[] shaders;
+#endif
+
+    max_count = 0;
+}
 
 IShader* ShaderManager::get_shader (uint32_t idx)
 {

@@ -18,6 +18,7 @@ class ShaderManager {
 		static ShaderManager* get_instance ();
 		void set_shader_size (const uint32_t count);
 
+        void free_programs ();
 		void set_shaders_and_compile (std::vector<ShaderInfoFile>& list);
 
 		uint32_t get_program (uint32_t idx);

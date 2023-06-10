@@ -11,10 +11,14 @@ class GlobalConfig {
 		virtual void list_of_levels () = 0;
 		virtual void entry_point () = 0;
 		virtual void switch_level () = 0;
+        virtual void load_res (uint32_t i, bool with_shaders) = 0;
+        virtual void unload_res () = 0;
 
 		ILevel* cur_level;
 
 		std::vector<ILevel *> n_levels;
+
+        bool is_loaded = {false};
 };
 
 #endif

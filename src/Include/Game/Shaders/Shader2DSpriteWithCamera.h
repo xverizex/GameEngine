@@ -6,6 +6,7 @@
 
 class Shader2DSpriteWithCamera: public IShader {
 	public:
+        ~Shader2DSpriteWithCamera() override;
 		void init () override;
 		void render (void *_data) override;
 

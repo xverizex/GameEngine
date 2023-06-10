@@ -6,6 +6,7 @@
 
 class Shader2DSprite: public IShader {
 	public:
+        ~Shader2DSprite() override;
 		void init () override;
 		void render (void *_data) override;
 

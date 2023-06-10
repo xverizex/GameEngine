@@ -1,11 +1,11 @@
 #ifndef LEVELS_ENUM_H
 #define LEVELS_ENUM_H
 
-/*
- * Here need to point levels
- */
-
 enum {
+	LEVEL_MENU,
+	LEVEL_TUTORIAL,
+	LEVEL_GAME,
+	LEVEL_SELECT_GAME,
 	N_LEVELS
 };
 

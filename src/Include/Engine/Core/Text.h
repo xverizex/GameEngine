@@ -9,12 +9,10 @@
 #include <wchar.h>
 #include <string>
 
-enum TYPE_FONTS {
-	MAIN_FONT_28,
-	N_TYPE_FONTS
-};
+
 
 struct Character {
+    bool is_not_destroy;
 	uint32_t TextureID;
 	glm::ivec2 Size;
 	glm::ivec2 Bearing;
@@ -22,17 +20,25 @@ struct Character {
 	bool builded = {false};
 };
 
+#define SIZE_LIST_FACE                          255
+#define SIZE_COUNT_FONTS                         10
+
 class Text {
 	public:
 		static Text *getInstance ();
 
 		void resizeMatrix();
-		void init (uint32_t index, uint64_t pos, uint32_t pixelSize);
+		void init_index (uint32_t index, uint64_t pos, uint32_t pixelSize);
+        void uninit (uint32_t);
+        void init (uint32_t);
+        void init_shaders ();
+        void build_text ();
 		void render (uint32_t index, const wchar_t *text, int x, int y, float scale, glm::vec3 color, bool only_know, uint32_t &_width, uint32_t &height);
 
 		FT_Library ft;
 		FT_Face *face;
-		std::vector<std::map<wchar_t, Character>> list_face;
+		Character *list_face[SIZE_COUNT_FONTS][SIZE_LIST_FACE];
+        bool init_list_face = {false};
 		glm::mat4 projection;
 
 		uint32_t program;
@@ -41,6 +47,7 @@ class Text {
 		uint32_t uniform_text_color;
 		uint32_t vao;
 		uint32_t vbo;
+        uint32_t size;
 	private:
 		Text(uint32_t size);
 

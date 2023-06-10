@@ -33,6 +33,13 @@ void downloader_init_sprite_array (uint32_t count)
 	vsprites = new VertexData*[count];
 }
 
+void downloader_download_all_sprites_without_progressbar_by_range (uint32_t min, uint32_t max)
+{
+    for (uint32_t i = min; i < max; i++) {
+        load_sprite (i);
+    }
+}
+
 void downloader_download_all_sprites_without_progressbar (std::vector<InfoSprite>& list)
 {
 	for (uint32_t i = 0; i < list.size (); i++) {

@@ -3,8 +3,10 @@
 VertexData::~VertexData ()
 {
 	for (uint32_t i = 0; i < size_f; i++) {
-		delete[] f[i];
-		delete[] data[i];
+        if (f[i])
+		    delete[] f[i];
+        if (data[i])
+		    delete[] data[i];
 	}
 
 	delete[] f;

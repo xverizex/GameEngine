@@ -4,6 +4,7 @@
 
 class IShader {
 	public:
+        virtual ~IShader();
 		virtual void init () = 0;
 		virtual void render(void *_data) = 0;
 };

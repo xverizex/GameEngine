@@ -1,11 +1,14 @@
+#include <asgl.h>
 #include <Engine/Core/Object.h>
 #include <string.h>
 #include <Engine/Core/Downloader.h>
 #include <Engine/Core/ShaderManager.h>
 #include <Engine/Core/ScreenManager.h>
 #include <Game/Core/ShaderList.h>
-#include <asgl.h>
 #include <Engine/Core/Animation.h>
+#ifdef __ANDROID__
+#include <GLES3/gl3.h>
+#endif
 
 Object::Object(TYPE_OBJECT type, uint32_t res, uint32_t count_div)
 {

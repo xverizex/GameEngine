@@ -1,3 +1,4 @@
+
 if (LINUX)
 	include(FindPkgConfig)
 	pkg_check_modules (SDL sdl2)
@@ -43,6 +44,7 @@ set (SOURCES_ENGINE
 	Engine/Core/Camera.cpp
 	Engine/Core/Text.cpp
 	Engine/Core/VertexData.cpp
+	Engine/Core/IShader.cpp
 	glad/glad.c
 	)
 
