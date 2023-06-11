@@ -24,6 +24,15 @@ void ILevel::save_stats ()
 
 }
 
+void ILevel::load_level ()
+{
+}
+
+void ILevel::unload_level ()
+{
+
+}
+
 void ILevel::unload_assets ()
 {
 }

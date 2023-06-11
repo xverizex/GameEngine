@@ -14,6 +14,8 @@ class ILevel {
 		virtual void tick ();
         virtual void load_stats ();
         virtual void save_stats ();
+        virtual void load_level ();
+        virtual void unload_level ();
 		virtual void mouse_click_down (int x, int y);
 		virtual void mouse_click_up (int x, int y);
 		virtual void mouse_motion (int x, int y);
@@ -22,7 +24,10 @@ class ILevel {
 
 		uint32_t new_level;
 
+        bool loaded_level = {false};
+        bool assets_loaded = {false};
 		GameConfig* cfg;
+        bool active = {false};
 };
 
 

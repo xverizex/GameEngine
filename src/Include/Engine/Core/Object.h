@@ -22,13 +22,18 @@ class Object {
 	protected:
 
 	private:
+        float set_widthed = {0.f};
 		glm::quat qrotate;
 		glm::vec3 vrotate;
 		void initUI(uint32_t res);
 		void initSprite(uint32_t res, uint32_t count_div);
 		void initModel(uint32_t res);
 		void initForeignTexture(uint32_t res, uint32_t width, uint32_t height);
+        void internal_load_sprite ();
+        void internal_unload_sprite ();
 	public:
+        void load_assets ();
+        void unload_assets ();
 		float aspect;
 		uint32_t typeObject;
 		glm::mat4 mposition;
@@ -37,16 +42,18 @@ class Object {
 		glm::mat4 mrotate;
 		glm::mat4 mscale;
 		IShader *shader;
+        uint32_t shader_type;
 		float w;
 		float h;
 
-		uint32_t *vbo;
+        uint32_t type_res = {0};
+		uint32_t *vbo = {nullptr};
 		uint32_t typeShapeRender;
 		glm::vec3 vpos;
 		uint32_t max_vertex;
 	public:
-		uint32_t *vao;
-		VertexData *vertexData;
+		uint32_t *vao = {nullptr};
+		VertexData *vertexData = {nullptr};
 		uint32_t getTypeObject() const;
 		const glm::mat4 &position() const;
 		const glm::mat4 &projection() const;

@@ -15,6 +15,7 @@ Object::Object(TYPE_OBJECT type, uint32_t res, uint32_t count_div)
 	shader = nullptr;
 
 	typeObject = type;
+    type_res = res;
 	mmodel = glm::mat4(1.f);
 	mrotate = glm::mat4(1.f);
 	mposition = glm::mat4(0.f);
@@ -30,6 +31,73 @@ Object::Object(TYPE_OBJECT type, uint32_t res, uint32_t count_div)
 			initSprite(res, count_div);
 			break;
 	}
+}
+
+void Object::internal_unload_sprite ()
+{
+    if (vao) {
+        delete[] vao;
+        vao = nullptr;
+    }
+    if (vbo) {
+        delete[] vbo;
+        vbo = nullptr;
+    }
+
+    vertexData = nullptr;
+    shader = nullptr;
+}
+
+void Object::internal_load_sprite ()
+{
+    vertexData = downloader_load_sprite(type_res);
+
+    ShaderManager* shader_manager = ShaderManager::get_instance();
+    shader = shader_manager->get_shader(shader_type);
+
+    uint32_t count = vertexData->size_f;
+
+    vao = new uint32_t[count];
+    vbo = new uint32_t[count];
+
+    glGenBuffers (count, vbo);
+    glGenVertexArrays (count, vao);
+
+    for (int i = 0; i < count; i++) {
+
+        glBindVertexArray (vao[i]);
+        glBindBuffer (GL_ARRAY_BUFFER, vbo[i]);
+        glBufferData (GL_ARRAY_BUFFER, sizeof (float) * 30, vertexData->f[i], GL_STATIC_DRAW);
+
+        glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, sizeof (float) * 5, (void *) 0);
+        glEnableVertexAttribArray (0);
+        glVertexAttribPointer (1, 2, GL_FLOAT, GL_FALSE, sizeof (float) * 5, (void *) (sizeof(float) * 3));
+        glEnableVertexAttribArray (1);
+
+        glBindBuffer (GL_ARRAY_BUFFER, 0);
+        glBindVertexArray (0);
+
+    }
+}
+
+void Object::unload_assets ()
+{
+    switch (typeObject) {
+        case TYPE_OBJECT::SPRITE:
+            internal_unload_sprite ();
+            break;
+    }
+}
+
+void Object::load_assets ()
+{
+    switch (typeObject) {
+        case TYPE_OBJECT::SPRITE:
+            internal_load_sprite();
+            break;
+    }
+
+    set_width(set_widthed);
 }
 
 Object::Object(TYPE_OBJECT type, uint32_t tex, uint32_t width, uint32_t height)
@@ -253,6 +321,8 @@ void Object::initUI(uint32_t res)
 
 void Object::set_width (float www)
 {
+    set_widthed = www;
+
 	ScreenManager* screen_manager = ScreenManager::get_instance ();
 	float aspect = screen_manager->width_float / screen_manager->height_float;
 
@@ -320,6 +390,8 @@ void Object::initSprite(uint32_t res, uint32_t count_div)
 	
 	ShaderManager* shader_manager = ShaderManager::get_instance();
 	shader = shader_manager->get_shader(SHADER_SPRITE);
+
+    shader_type = SHADER_SPRITE;
 
 	uint32_t count = vertexData->size_f;
 

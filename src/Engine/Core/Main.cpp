@@ -66,6 +66,8 @@ event_linux (void* _data)
 	return 0;
 }
 
+static bool assets_loaded = false;
+
 void pc_respawn_gl_context ()
 {
     shader_manager->set_shader_size (N_SHADERS);
@@ -89,10 +91,13 @@ void android_respawn_gl_context ()
     if (transport_is_stop()) {
         if (ctx) {
 
+
             game_config->unload_res ();
 
             text->uninit(N_TYPE_FONTS);
             game_config->cur_level->unload_assets();
+            assets_loaded = false;
+            game_config->cur_level->active = false;
 
             SDL_GL_DeleteContext(ctx);
 
@@ -122,7 +127,14 @@ void android_respawn_gl_context ()
         text->build_text();
         text->init_shaders();
 
-        game_config->cur_level->load_assets();
+        if (game_config->cur_level->loaded_level == false) {
+            game_config->cur_level->load_level();
+        } else {
+            game_config->cur_level->load_assets();
+            game_config->cur_level->active = true;
+        }
+
+        assets_loaded = true;
 
         is_resume = false;
     }
@@ -212,9 +224,11 @@ main(int argc, char **argv)
 
 		game_config->cur_level->clear_screen ();
 
-		game_config->cur_level->tick ();
+        if (assets_loaded) {
+            game_config->cur_level->tick ();
+            game_config->cur_level->render ();
+        }
 
-		game_config->cur_level->render ();
 
 		SDL_GL_SwapWindow (window);
 
