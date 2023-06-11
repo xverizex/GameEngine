@@ -171,16 +171,12 @@ void Text::build_text ()
 
 void Text::init (uint32_t size)
 {
-    face = new FT_Face[size];
-
     if (FT_Init_FreeType(&ft)) {
         printf ("error freetype init\n");
         exit (1);
     }
 
-
-
-
+    face = new FT_Face[size];
 
     init_list_face = true;
 }
@@ -192,7 +188,7 @@ void Text::init_index(uint32_t index, uint64_t enum_pos, uint32_t pixelSize)
 
 	FT_New_Memory_Face (ft, data, size, 0, &face[index]);
 
-    delete[] data;
+    	//delete[] data;
 
 	FT_Set_Pixel_Sizes (face[index], 0, pixelSize);
 
