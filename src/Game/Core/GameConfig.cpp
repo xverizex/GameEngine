@@ -83,10 +83,12 @@ void GameConfig::init_screen ()
 void GameConfig::list_of_levels ()
 {
 	n_levels.resize (N_LEVELS);
+#if 0
 	n_levels[LEVEL_GAME] = new GameLevel ();
 	n_levels[LEVEL_SELECT_GAME] = new SelectLevel ();
 	n_levels[LEVEL_MENU] = new MenuLevel ();
 	n_levels[LEVEL_TUTORIAL] = new TutorialLevel ();
+#endif
 }
 
 void GameConfig::entry_point ()
