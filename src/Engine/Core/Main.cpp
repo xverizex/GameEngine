@@ -83,6 +83,8 @@ void pc_respawn_gl_context ()
     text->init_index (0, RES_TERMINUS_TTF, 48);
     text->init_shaders();
     text->build_text();
+
+    assets_loaded = true;
 }
 
 #ifdef __ANDROID__
@@ -205,7 +207,7 @@ main(int argc, char **argv)
 	game_config->entry_point ();
 
 #ifndef __ANDROID__
-	game_config->cur_level->load_assets ();
+	game_config->cur_level->load_level ();
 #endif
 
 	SDL_CreateThread (event_linux, "thread", game_config);
@@ -222,7 +224,7 @@ main(int argc, char **argv)
         android_respawn_gl_context();
 #endif
 
-		game_config->cur_level->clear_screen ();
+	game_config->cur_level->clear_screen ();
 
         if (assets_loaded) {
             game_config->cur_level->tick ();

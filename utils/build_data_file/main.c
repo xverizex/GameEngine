@@ -12,11 +12,13 @@
  * SHADERS = 0
  * FONTS = 1
  * TEXTURES = 2
+ * SOUND_FILE = 3
  */
 
 #define POS_SHADERS                (0 * sizeof (uint64_t))
 #define POS_FONTS                  (1 * sizeof (uint64_t))
 #define POS_TEXTURES               (2 * sizeof (uint64_t))
+#define POS_SOUND                  (3 * sizeof (uint64_t))
 
 struct file_info {
 	uint32_t num;
@@ -28,14 +30,18 @@ uint32_t block = 512;
 uint32_t fs_count_file_info;
 uint32_t fffs_count_file_info;
 uint32_t fts_count_file_info;
+uint32_t fss_count_file_info;
 uint32_t fs_count_block = 1;
 uint32_t fffs_count_block = 1;
 uint32_t fts_count_block = 1;
+uint32_t fss_count_block = 1;
 uint32_t fs_cur_size_block;
 uint32_t fffs_cur_size_block;
 uint32_t fts_cur_size_block;
+uint32_t fss_cur_size_block;
 
 struct file_info *fs;
+struct file_info *fss;
 struct file_info *fffs;
 struct file_info *fts;
 
@@ -44,6 +50,12 @@ void fs_restructure_blocks ()
 	fs_count_block++;
 	fs_cur_size_block = block * fs_count_block;
 	fs = realloc (fs, sizeof (struct file_info) * fs_cur_size_block);
+}
+void fss_restructure_blocks ()
+{
+	fss_count_block++;
+	fss_cur_size_block = block * fss_count_block;
+	fss = realloc (fss, sizeof (struct file_info) * fss_cur_size_block);
 }
 void fffs_restructure_blocks ()
 {
@@ -92,6 +104,7 @@ void make_enum ()
 			"\tR_SHADERS,\n"
 			"\tR_FONTS,\n"
 			"\tR_TEXTURES,\n"
+			"\tR_SOUNDS,\n"
 			"\tN_R\n"
 			"};\n\n"
 			);
@@ -126,6 +139,16 @@ void make_enum ()
 
 	fprintf (fp, "};\n\n");
 
+	fprintf (fp, "enum {\n");
+
+	for (int i = 0; i < fss_count_file_info; i++) {
+		fprintf (fp, "\t%s,\n", fss[i].define_name);
+	}
+
+	fprintf (fp, "\tN_SOUNDS_RES\n");
+
+	fprintf (fp, "};\n\n");
+
 	fprintf (fp, "#endif\n");
 
 	fclose (fp);
@@ -134,9 +157,11 @@ void make_enum ()
 int main (int argc, char **argv)
 {
 	fs = malloc (block * fs_count_block * sizeof (struct file_info));
+	fss = malloc (block * fss_count_block * sizeof (struct file_info));
 	fffs = malloc (block * fffs_count_block * sizeof (struct file_info));
 	fts = malloc (block * fts_count_block * sizeof (struct file_info));
 	fs_cur_size_block = fs_count_block * block;
+	fss_cur_size_block = fss_count_block * block;
 	fffs_cur_size_block = fffs_count_block * block;
 	fts_cur_size_block = fts_count_block * block;
 
@@ -184,6 +209,14 @@ int main (int argc, char **argv)
 				if (fts_count_file_info >= fts_cur_size_block)
 					fts_restructure_blocks ();
 				break;
+			case 3:
+				fss[fss_count_file_info].num = num;
+				strncpy (fss[fss_count_file_info].name, name, strlen (name));
+				strncpy (fss[fss_count_file_info].define_name, defined_name, strlen (defined_name));
+				fss_count_file_info++;
+				if (fss_count_file_info >= fss_cur_size_block)
+					fss_restructure_blocks ();
+				break;
 		}
 
 
@@ -199,13 +232,14 @@ int main (int argc, char **argv)
 	fwrite (&little_big_engian, sizeof (uint64_t), 1, dt);
 
 	uint64_t group = 0L;
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 4; i++) {
 		fwrite (&group, sizeof (uint64_t), 1, dt);
 	}
 
 	uint64_t group_pos_shaders = 0L;
 	uint64_t group_pos_fonts = 0L;
 	uint64_t group_pos_textures = 0L;
+	uint64_t group_pos_sounds = 0L;
 	uint64_t off = 0L;
 	/*
 	 * write shaders positions and tell group where it location
@@ -234,6 +268,15 @@ int main (int argc, char **argv)
 	fseek (dt, group_pos_textures, SEEK_SET);
 
 	for (int i = 0; i < fts_count_file_info; i++) {
+		fwrite (&off, sizeof (uint64_t), 1, dt);
+	}
+
+	group_pos_sounds = ftell (dt);
+	fseek (dt, sizeof (uint64_t) + POS_SOUND, SEEK_SET);
+	fwrite (&group_pos_sounds, sizeof (uint64_t), 1, dt);
+	fseek (dt, group_pos_sounds, SEEK_SET);
+
+	for (int i = 0; i < fss_count_file_info; i++) {
 		fwrite (&off, sizeof (uint64_t), 1, dt);
 	}
 
@@ -329,6 +372,38 @@ int main (int argc, char **argv)
 		fseek (dt, pos_continue, SEEK_SET);
 
 		fprintf (log, "%s = %lx\n", fts[i].name, off);
+
+		free (data);
+	}
+
+	/* 
+	 * work with sounds
+	 */
+	i = 0;
+	for (; i < fss_count_file_info; i++) {
+		FILE *file = fopen (fss[i].name, "r");
+		uint64_t size = 0L;
+		fseek (file, 0, SEEK_END);
+		size = ftell (file);
+		fseek (file, 0, SEEK_SET);
+
+		uint8_t *data = malloc (size);
+		fread (data, size, 1, file);
+		fclose (file);
+
+		off = ftell (dt);
+
+		fwrite (&size, sizeof (uint64_t), 1, dt);
+		fwrite (data, size, 1, dt);
+
+		uint64_t pos_continue = ftell (dt);
+
+		fseek (dt, group_pos_sounds + sizeof (uint64_t) * i, SEEK_SET);
+		fwrite (&off, sizeof (uint64_t), 1, dt);
+
+		fseek (dt, pos_continue, SEEK_SET);
+
+		fprintf (log, "%s = %lx\n", fss[i].name, off);
 
 		free (data);
 	}
