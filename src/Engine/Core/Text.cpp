@@ -30,7 +30,7 @@ void Text::resizeMatrix()
 
 	float aspect = w / h;
 
-	projection = glm::ortho (0.f, w, 0.f, h, -1.0f, 10.f);
+	projection = glm::ortho (0.f, w, h, 0.f, -1.0f, 10.f);
 }
 
 void Text::init_shaders ()
@@ -51,7 +51,7 @@ void Text::init_shaders ()
 
     float aspect = w / h;
 
-    projection = glm::ortho (0.f, w, 0.f, h, -1.0f, 10.f);
+	projection = glm::ortho (0.f, w, h, 0.f, -1.0f, 10.f);
 
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
@@ -210,7 +210,7 @@ void Text::render(uint32_t index, const wchar_t *text, int xx, int yy, float sca
 	float x = static_cast<float>(xx);
 	float y = static_cast<float>(yy);
 
-	projection = glm::ortho (0.f, w, 0.f, h, -1.0f, 10.f);
+	projection = glm::ortho (0.f, w, h, 0.f, -1.0f, 10.f);
 
 
 	uint32_t len = wcslen (text);
@@ -238,19 +238,19 @@ void Text::render(uint32_t index, const wchar_t *text, int xx, int yy, float sca
             }
 
 			float xpos = x + (float)ch->Bearing.x * scale;
-			float ypos = y - (float)(ch->Size.y - ch->Bearing.y) * scale;
+			float ypos = y + (float)(ch->Size.y - ch->Bearing.y) * scale;
 			_height = ch->Size.y > _height? ch->Size.y: _height;
 
 			float www = (float) ch->Size.x * scale;
 			float hhh = (float) ch->Size.y * scale;
 
 			float vertices[6 * 4] = {
-				xpos,		ypos + hhh,	0.f, 0.f,
-				xpos,		ypos, 		0.f, 1.f,
-				xpos + www,	ypos,		1.f, 1.f,
-				xpos,		ypos + hhh,	0.f, 0.f,
-				xpos + www,	ypos, 		1.f, 1.f,
-				xpos + www, ypos + hhh, 	1.f, 0.f
+				xpos,		ypos,	                0.f, 1.f,
+				xpos,		ypos - hhh, 		0.f, 0.f,
+				xpos + www,	ypos,		        1.f, 1.f,
+				xpos + www,		ypos,	        1.f, 1.f,
+				xpos + www,	ypos - hhh, 		1.f, 0.f,
+				xpos, ypos - hhh, 	                0.f, 0.f
 			};
 
             if (!ch->is_not_destroy) {
