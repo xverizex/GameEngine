@@ -45,6 +45,7 @@ set (SOURCES_ENGINE
 	Engine/Core/Text.cpp
 	Engine/Core/VertexData.cpp
 	Engine/Core/IShader.cpp
+	Engine/Core/SoundLinux.cpp
 	glad/glad.c
 	)
 
