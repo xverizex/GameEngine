@@ -29,7 +29,7 @@ int main (int argc, char **argv) {
 	fwrite (&height, sizeof (int), 1, fp);
 
 	for (int y = 0; y < height; y++) {
-		for (int x = width - 1; x >= 0; x--) {
+		for (int x = 0; x < width; x++) {
 			uint8_t stream[4];
 			stream[0] = img[y][x].red;
 			stream[1] = img[y][x].green;
