@@ -19,6 +19,7 @@
 #define POS_FONTS                  (1 * sizeof (uint64_t))
 #define POS_TEXTURES               (2 * sizeof (uint64_t))
 #define POS_SOUND                  (3 * sizeof (uint64_t))
+#define POS_OBJ                    (4 * sizeof (uint64_t))
 
 enum {
 	R_SHADERS,
@@ -76,7 +77,8 @@ void make_enum ()
 		"\tN_SHADER_RES\n",
 		"\tN_FONTS_RES\n",
 		"\tN_TEXTURES_RES\n",
-		"\tN_SOUNDS_RES\n"
+		"\tN_SOUNDS_RES\n",
+		"\tN_OBJ_RES\n"
 	};
 
 	FILE *fp = fopen (RES_ENUM, "w");
@@ -92,6 +94,7 @@ void make_enum ()
 			"\tR_FONTS,\n"
 			"\tR_TEXTURES,\n"
 			"\tR_SOUNDS,\n"
+			"\tR_OBJ,\n"
 			"\tN_R\n"
 			"};\n\n"
 			);
